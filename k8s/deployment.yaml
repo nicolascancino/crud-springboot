@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crud-springboot
+  labels:
+    app: crud-springboot
+spec:
+  replicas: 1
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: crud-springboot
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: crud-springboot
+    spec:
+      containers:
+        - name: crud-springboot
+          image: gcr.io/bar-reader/crud-springboot:1.0.1
+          livenessProbe:
+            httpGet:
+              path: /v1/health
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 1
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /v1/health
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          imagePullPolicy: IfNotPresent
+          resources:
