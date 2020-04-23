@@ -11,4 +11,4 @@ spec:
       targetPort: 8080
   selector:
     app: crud-springboot
-  type: NodePort
+  type: LoadBalancer
